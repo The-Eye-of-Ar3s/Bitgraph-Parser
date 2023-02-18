@@ -1,5 +1,6 @@
 use std::io::{Cursor, Read};
 use byteorder::{ReadBytesExt, LittleEndian};
+use sha2::{Sha256, Digest};
 
 #[derive(Debug)]
 pub struct BlockHeader {
@@ -32,5 +33,26 @@ impl BlockHeader {
         let nonce: u32 = match cursor.read_u32::<LittleEndian>() { Err(_) => {return Err(())} Ok(v) => {v} };
 
         return Ok(BlockHeader { version: version, previous_block_hash: previous_block_hash, merkle_root: merkle_root, time: time, bits: bits, nonce: nonce });
+    }
+}
+
+impl BlockHeader {
+    pub fn calculate_blockhash(&self) -> String {
+        let mut hasher: Sha256 = Sha256::new();
+        hasher.update(self.to_binary());
+        let round1 = hasher.finalize();
+        let mut hasher: Sha256 = Sha256::new();
+        hasher.update(round1);
+        return hex::encode(&hasher.finalize()[..]);
+    }
+    pub fn to_binary(&self) -> Vec<u8> {
+        let mut data: Vec<u8> = vec![];
+        data.append(&mut self.version.to_be_bytes().to_vec());
+        data.append(&mut self.previous_block_hash.to_vec());
+        data.append(&mut self.merkle_root.to_vec());
+        data.append(&mut self.time.to_be_bytes().to_vec());
+        data.append(&mut self.bits.to_be_bytes().to_vec());
+        data.append(&mut self.nonce.to_be_bytes().to_vec());
+        return data;
     }
 }

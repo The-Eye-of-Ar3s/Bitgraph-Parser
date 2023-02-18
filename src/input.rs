@@ -2,12 +2,12 @@ use std::{io::{Cursor, Read}, vec};
 
 use byteorder::{ReadBytesExt, LittleEndian};
 use json::{JsonValue, object};
-use super::misc::var_int;
+use super::varint::VarInt;
 
 pub struct Input {
     pub txid: [u8; 32],
     pub vout: u32,
-    pub script_sig_size: u64,
+    pub script_sig_size: VarInt,
     pub script_sig: Vec<u8>,
     pub sequence: u32
 }
@@ -19,9 +19,9 @@ impl Input {
         txid.reverse();
 
         let vout: u32 = match cursor.read_u32::<LittleEndian>() { Err(_) => {return Err(())} Ok(v) => {v} };
-        let script_sig_size: u64 = match var_int(cursor) { Err(_) => { return Err(()) } Ok(v) => {v} };
+        let script_sig_size: VarInt = match VarInt::from_cursor(cursor) { Err(_) => { return Err(()) } Ok(v) => {v} };
         
-        let mut script_sig: Vec<u8> = vec![0; script_sig_size as usize];
+        let mut script_sig: Vec<u8> = vec![0; script_sig_size.value as usize];
         match cursor.read(&mut script_sig) { Err(_) => {return Err(())} Ok(_) => {} };
 
         let sequence: u32 = match cursor.read_u32::<LittleEndian>() { Err(_) => {return Err(())} Ok(v) => {v} };
@@ -35,7 +35,7 @@ impl Input {
         return object! {
             txid: self.txid.into_iter().map(|i| format!("{:02x}", i)).collect::<String>().to_uppercase(),
             vout: self.vout,
-            script_sig_size: self.script_sig_size,
+            script_sig_size: self.script_sig_size.value,
             script_sig: (&self.script_sig).into_iter().map(|i| format!("{:02x}", i)).collect::<String>().to_uppercase(),
             sequence: self.sequence
         }
@@ -47,7 +47,7 @@ impl Input {
         let mut data: Vec<u8> = vec![];
         data.append(&mut self.txid.to_vec());
         data.append(&mut self.vout.to_be_bytes().to_vec());
-        data.append(&mut self.script_sig_size.to_be_bytes().to_vec());
+        data.append(&mut self.script_sig_size.to_binary());
         data.append(&mut self.script_sig.clone());
         return data;
     }

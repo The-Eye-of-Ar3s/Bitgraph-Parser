@@ -4,6 +4,7 @@ mod blockheader;
 mod transaction_data;
 mod input;
 mod output;
+mod varint;
 
 pub use block::*;
 pub use blockheader::*;
@@ -13,12 +14,10 @@ pub use output::*;
 
 #[cfg(test)]
 mod tests {
-    use std::{path::PathBuf, str::FromStr};
-
     use super::block::Block;
 
     #[test]
     fn it_works() {
-        Block::load(PathBuf::from_str("D:\\BTC\\Bitcoin\\blocks\\blk00000.dat").unwrap()).unwrap();
+        Block::load_one("D:\\BTC\\Bitcoin\\blocks\\blk00000.dat").unwrap();
     }
 }
