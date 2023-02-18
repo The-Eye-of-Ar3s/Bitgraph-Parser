@@ -1,0 +1,38 @@
+{
+    "magic": "F9BEB4D9",
+    "size": 285,
+    "block_header": {
+        "version": 1,
+        "previous_block_hash": "00000000000000000000000000000000",
+        "merkle_root": "3BA3EDFD7A7B12B27AC72C3E67768F617FC81BC3888A51323A9FB8AA4B1E5E4A",
+        "time": 1231006505,
+        "bits": 486604799,
+        "nonce": 2083236893
+    },
+    "txcount": 1,
+    "transactions": [
+        {
+            "txid": "643aed27ae20ac9eb2d316b8f49c07c77d14efab02e9aff8952b9cbb367284b1",
+            "version": 1,
+            "input_count": 1,
+            "input": [
+                {
+                    "txid": "0000000000000000000000000000000000000000000000000000000000000000",
+                    "vout": 4294967295,
+                    "script_sig_size": 77,
+                    "script_sig": "04FFFF001D0104455468652054696D65732030332F4A616E2F32303039204368616E63656C6C6F72206F6E206272696E6B206F66207365636F6E64206261696C6F757420666F722062616E6B73",
+                    "sequence": 4294967295
+                }
+            ],
+            "output_count": 1,
+            "output": [
+                {
+                    "value": 5000000000,
+                    "script_pub_key_size": 67,
+                    "script_pub_key": "4104678AFDB0FE5548271967F1A67130B7105CD6A828E03909A67962E0EA1F61DEB649F6BC3F4CEF38C4F35504E51EC112DE5C384DF7BA0B8D578A4C702B6BF11D5FAC"
+                }
+            ],
+            "locktime": 0
+        }
+    ]
+}
